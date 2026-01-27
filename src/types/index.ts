@@ -67,6 +67,7 @@ export const INITIAL_COMPANY: CompanyInfo = {
     phone: '',
     email: 'bilbao@dlkom.com',
     cif: '',
+    logo: '/DLKomPresupuesto/logo.png',
 };
 
 export const DEFAULT_NOTES = `1. VALIDEZ DEL PRESUPUESTO
