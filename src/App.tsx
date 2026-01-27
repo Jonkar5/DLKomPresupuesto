@@ -15,7 +15,10 @@ import { Lock, Unlock } from 'lucide-react';
 function App() {
   const [company, setCompany] = useState<CompanyInfo>(() => {
     const saved = localStorage.getItem('budget_company');
-    return saved ? JSON.parse(saved) : INITIAL_COMPANY;
+    const company = saved ? JSON.parse(saved) : INITIAL_COMPANY;
+    // Force default logo if missing for rebranding
+    if (!company.logo) company.logo = INITIAL_COMPANY.logo;
+    return company;
   });
 
   const [ivaRate, setIvaRate] = useState<number>(() => {
@@ -169,7 +172,10 @@ function App() {
               )}
             </div>
             <div>
-              <h1 className="text-xl font-black tracking-tighter text-slate-900 leading-none">PRESUPUESTO <span className="text-primary-600 tracking-normal font-extrabold ml-1">{company.name}</span></h1>
+              <h1 className="text-xl font-black tracking-tighter text-slate-800 leading-none flex items-center gap-2">
+                DLKom <span className="text-primary-600 font-extrabold">Presupuesto</span>
+              </h1>
+              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1 uppercase italic">{company.name}</p>
             </div>
           </div>
 
