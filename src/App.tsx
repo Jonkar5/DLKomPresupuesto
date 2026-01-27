@@ -140,13 +140,13 @@ function App() {
 
   const [saveStatus, setSaveStatus] = useState<boolean>(false);
 
-  const handleManualSave = () => {
+  const handleManualSave = async () => {
     setSaveStatus(true);
     setTimeout(() => setSaveStatus(false), 2000);
-    exportBudget();
+    await exportBudget();
   };
 
-  const exportBudget = () => {
+  const exportBudget = async () => {
     const data = {
       client,
       items,
@@ -156,10 +156,34 @@ function App() {
       dynamicGroups,
       version: '1.0'
     };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const content = JSON.stringify(data, null, 2);
+    const filename = `Presupuesto_${client.name || 'SinNombre'}_${new Date().toISOString().split('T')[0]}.json`;
+
+    // Try to use the File System Access API (Desktop / Chrome / Edge)
+    if ('showSaveFilePicker' in window) {
+      try {
+        const handle = await (window as any).showSaveFilePicker({
+          suggestedName: filename,
+          types: [{
+            description: 'Archivo de Presupuesto',
+            accept: { 'application/json': ['.json'] },
+          }],
+        });
+        const writable = await handle.createWritable();
+        await writable.write(content);
+        await writable.close();
+        return;
+      } catch (err) {
+        // If user cancelled, don't do anything
+        if ((err as Error).name === 'AbortError') return;
+        // Other errors will fall back to standard download
+      }
+    }
+
+    // Fallback for Mobile or older browsers
+    const blob = new Blob([content], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    const filename = `Presupuesto_${client.name || 'SinNombre'}_${new Date().toISOString().split('T')[0]}.json`;
     link.href = url;
     link.download = filename;
     link.click();
