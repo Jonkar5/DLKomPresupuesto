@@ -6,11 +6,10 @@ import { BudgetBuilder } from './components/BudgetBuilder';
 import { SummaryCard } from './components/SummaryCard';
 import { AreaCalculator } from './components/AreaCalculator';
 import { Button, cn } from './components/ui';
-import { Save, Trash2, Printer, Plus, Upload, Building2, FileText, Eye, EyeOff, Calculator } from 'lucide-react';
+import { Save, Trash2, Printer, Plus, Upload, Building2, FileText, Eye, EyeOff, Calculator, Lock, Unlock, Download, Check } from 'lucide-react';
 import { GROUPS } from './data/categories';
 import { INITIAL_COMPANY, DEFAULT_NOTES } from './types';
 import type { CompanyInfo, Group } from './types';
-import { Lock, Unlock } from 'lucide-react';
 
 function App() {
   const [company, setCompany] = useState<CompanyInfo>(() => {
@@ -139,6 +138,57 @@ function App() {
     }
   };
 
+  const [saveStatus, setSaveStatus] = useState<boolean>(false);
+
+  const handleManualSave = () => {
+    setSaveStatus(true);
+    setTimeout(() => setSaveStatus(false), 2000);
+  };
+
+  const exportBudget = () => {
+    const data = {
+      client,
+      items,
+      notes,
+      ivaRate,
+      company,
+      dynamicGroups,
+      version: '1.0'
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const filename = `Presupuesto_${client.name || 'SinNombre'}_${new Date().toISOString().split('T')[0]}.json`;
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importBudget = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target?.result as string);
+        if (data.client) setClient(data.client);
+        if (data.items) setItems(data.items);
+        if (data.notes) setNotes(data.notes);
+        if (data.ivaRate) setIvaRate(data.ivaRate);
+        if (data.company) setCompany(data.company);
+        if (data.dynamicGroups) setDynamicGroups(data.dynamicGroups);
+        alert('Presupuesto cargado correctamente');
+      } catch (err) {
+        alert('Error al cargar el archivo. Formato no válido.');
+      }
+    };
+    reader.readAsText(file);
+    // Reset input so the same file can be uploaded again if needed
+    e.target.value = '';
+  };
+
   const handlePrint = () => {
     window.print();
   };
@@ -209,9 +259,35 @@ function App() {
               <Printer size={18} />
               <span className="hidden md:inline ml-2">Vista PDF</span>
             </Button>
-            <Button className="bg-primary-600 hover:bg-primary-500 text-white rounded-xl h-11 px-6 shadow-xl shadow-primary-500/30 font-bold transition-all hover:scale-[1.02] active:scale-95 group">
-              <Save size={18} className="group-hover:rotate-12 transition-transform" />
-              <span className="hidden md:inline ml-2">Guardar Cambios</span>
+            <Button
+              variant="secondary"
+              onClick={exportBudget}
+              className="bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 rounded-xl h-11 px-6 shadow-sm transition-all font-bold group"
+              title="Descargar presupuesto como archivo para guardar en tu PC"
+            >
+              <Download size={18} className="group-hover:-translate-y-0.5 transition-transform" />
+              <span className="hidden md:inline ml-2">Exportar</span>
+            </Button>
+
+            <label className="cursor-pointer">
+              <input type="file" accept=".json" onChange={importBudget} className="hidden" />
+              <div className="flex items-center bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600 rounded-xl h-11 px-6 shadow-sm transition-all font-bold group">
+                <Upload size={18} className="group-hover:translate-y-0.5 transition-transform" />
+                <span className="hidden md:inline ml-2">Importar</span>
+              </div>
+            </label>
+
+            <div className="w-px h-8 bg-slate-200 mx-2 hidden md:block"></div>
+
+            <Button
+              onClick={handleManualSave}
+              className={cn(
+                "rounded-xl h-11 px-6 shadow-xl shadow-primary-500/30 font-bold transition-all hover:scale-[1.02] active:scale-95 group",
+                saveStatus ? "bg-emerald-600 hover:bg-emerald-500" : "bg-primary-600 hover:bg-primary-500"
+              )}
+            >
+              {saveStatus ? <Check size={18} /> : <Save size={18} className="group-hover:rotate-12 transition-transform" />}
+              <span className="hidden md:inline ml-2">{saveStatus ? '¡Guardado!' : 'Guardar Cambios'}</span>
             </Button>
           </div>
         </div>
