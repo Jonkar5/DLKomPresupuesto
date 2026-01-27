@@ -6,7 +6,7 @@ import { BudgetBuilder } from './components/BudgetBuilder';
 import { SummaryCard } from './components/SummaryCard';
 import { AreaCalculator } from './components/AreaCalculator';
 import { Button, cn } from './components/ui';
-import { Save, Trash2, Printer, Plus, Upload, Building2, FileText, Eye, EyeOff, Calculator, Lock, Unlock, Download, Check } from 'lucide-react';
+import { Save, Trash2, Printer, Plus, Upload, Building2, FileText, Eye, EyeOff, Calculator, Lock, Unlock, Check } from 'lucide-react';
 import { GROUPS } from './data/categories';
 import { INITIAL_COMPANY, DEFAULT_NOTES } from './types';
 import type { CompanyInfo, Group } from './types';
@@ -143,6 +143,7 @@ function App() {
   const handleManualSave = () => {
     setSaveStatus(true);
     setTimeout(() => setSaveStatus(false), 2000);
+    exportBudget();
   };
 
   const exportBudget = () => {
@@ -259,19 +260,10 @@ function App() {
               <Printer size={18} />
               <span className="hidden md:inline ml-2">Vista PDF</span>
             </Button>
-            <Button
-              variant="secondary"
-              onClick={exportBudget}
-              className="bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 rounded-xl h-11 px-6 shadow-sm transition-all font-bold group"
-              title="Descargar presupuesto como archivo para guardar en tu PC"
-            >
-              <Download size={18} className="group-hover:-translate-y-0.5 transition-transform" />
-              <span className="hidden md:inline ml-2">Exportar</span>
-            </Button>
 
             <label className="cursor-pointer">
               <input type="file" accept=".json" onChange={importBudget} className="hidden" />
-              <div className="flex items-center bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600 rounded-xl h-11 px-6 shadow-sm transition-all font-bold group">
+              <div className="flex items-center bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600 rounded-xl h-11 px-6 shadow-sm transition-all font-bold group" title="Cargar un presupuesto guardado anteriormente">
                 <Upload size={18} className="group-hover:translate-y-0.5 transition-transform" />
                 <span className="hidden md:inline ml-2">Importar</span>
               </div>
@@ -285,9 +277,10 @@ function App() {
                 "rounded-xl h-11 px-6 shadow-xl shadow-primary-500/30 font-bold transition-all hover:scale-[1.02] active:scale-95 group",
                 saveStatus ? "bg-emerald-600 hover:bg-emerald-500" : "bg-primary-600 hover:bg-primary-500"
               )}
+              title="Guardar este presupuesto como archivo en tu ordenador"
             >
               {saveStatus ? <Check size={18} /> : <Save size={18} className="group-hover:rotate-12 transition-transform" />}
-              <span className="hidden md:inline ml-2">{saveStatus ? '¡Guardado!' : 'Guardar Cambios'}</span>
+              <span className="hidden md:inline ml-2">{saveStatus ? '¡Guardado!' : 'Guardar en PC'}</span>
             </Button>
           </div>
         </div>
