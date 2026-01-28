@@ -171,10 +171,19 @@ export function BudgetBuilder({
                                             />
                                             {item.salePrice > 0 && (
                                                 <div className="flex justify-end">
-                                                    <span className="text-[9px] bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded font-black border border-emerald-100 tracking-wider inline-flex items-center gap-1">
-                                                        <div className="w-1 h-1 rounded-full bg-emerald-500"></div>
-                                                        {margin}%
-                                                    </span>
+                                                    {(() => {
+                                                        const benefit = item.salePrice - item.costPrice;
+                                                        const isPositive = benefit >= 0;
+                                                        return (
+                                                            <span className={`text-[9px] px-1.5 py-0.5 rounded font-black border tracking-wider inline-flex items-center gap-1 ${isPositive
+                                                                    ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
+                                                                    : 'bg-red-50 text-red-600 border-red-100'
+                                                                }`}>
+                                                                <div className={`w-1 h-1 rounded-full ${isPositive ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
+                                                                {margin}%
+                                                            </span>
+                                                        );
+                                                    })()}
                                                 </div>
                                             )}
                                         </div>
