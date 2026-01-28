@@ -102,7 +102,7 @@ export function BudgetBuilder({
                             </tr>
                         )}
                         {items.map((item) => {
-                            const { total, margin } = calculateRow(item);
+                            const { total, margin, benefit } = calculateRow(item);
                             const currentGroup = groups.find(g => g.name === item.group);
 
                             return (
@@ -171,19 +171,13 @@ export function BudgetBuilder({
                                             />
                                             {item.salePrice > 0 && (
                                                 <div className="flex justify-end">
-                                                    {(() => {
-                                                        const benefit = item.salePrice - item.costPrice;
-                                                        const isPositive = benefit >= 0;
-                                                        return (
-                                                            <span className={`text-[9px] px-1.5 py-0.5 rounded font-black border tracking-wider inline-flex items-center gap-1 ${isPositive
-                                                                    ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
-                                                                    : 'bg-red-50 text-red-600 border-red-100'
-                                                                }`}>
-                                                                <div className={`w-1 h-1 rounded-full ${isPositive ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
-                                                                {margin}%
-                                                            </span>
-                                                        );
-                                                    })()}
+                                                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-black border tracking-wider inline-flex items-center gap-1 ${benefit >= 0
+                                                        ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
+                                                        : 'bg-red-50 text-red-600 border-red-100'
+                                                        }`}>
+                                                        <div className={`w-1 h-1 rounded-full ${benefit >= 0 ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
+                                                        {margin}%
+                                                    </span>
                                                 </div>
                                             )}
                                         </div>
