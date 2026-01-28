@@ -5,6 +5,7 @@ import { ClientForm } from './components/ClientForm';
 import { BudgetBuilder } from './components/BudgetBuilder';
 import { SummaryCard } from './components/SummaryCard';
 import { AreaCalculator } from './components/AreaCalculator';
+import { RichTextEditor } from './components/RichTextEditor';
 import { Button, cn } from './components/ui';
 import { Save, Trash2, Printer, Plus, Upload, Building2, FileText, Eye, EyeOff, Calculator, Lock, Unlock, Check } from 'lucide-react';
 import { GROUPS } from './data/categories';
@@ -332,11 +333,11 @@ function App() {
               <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
                 <Save size={16} /> Notas y Condiciones del Presupuesto
               </h3>
-              <textarea
+              <RichTextEditor
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                className="w-full min-h-[300px] p-4 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 font-serif text-sm leading-relaxed text-slate-600"
+                onChange={setNotes}
                 placeholder="Escribe aquí las condiciones legales, plazos, formas de pago..."
+                className="w-full"
               />
               <p className="text-[10px] text-slate-400 mt-2 italic">Estas notas se imprimirán en una página aparte al final del presupuesto.</p>
             </section>
@@ -539,7 +540,7 @@ function App() {
                   </table>
 
                   {/* Totals & Payments Section */}
-                  <div className="mt-10 pt-8 border-t border-slate-200">
+                  <div className="mt-10 pt-8 border-t border-slate-200 page-no-break">
                     <div className="grid grid-cols-2 gap-12 items-start">
                       {/* Payment Terms (Left) */}
                       <div className="space-y-6">
@@ -615,14 +616,10 @@ function App() {
               <FileText className="text-primary-600" size={20} />
               <h2 className="text-base font-black text-slate-900 uppercase tracking-widest">Condiciones Generales y Notas</h2>
             </div>
-            <div className="text-[11px] text-slate-800 space-y-4 leading-relaxed font-serif p-8 bg-slate-50/20 rounded-xl border border-slate-100">
-              {notes.split('.').filter(p => p.trim()).map((point, i) => (
-                <p key={i}>
-                  <span className="text-primary-600 font-bold mr-2">{i + 1}.</span>
-                  {point.trim()}.
-                </p>
-              ))}
-            </div>
+            <div
+              className="text-[11px] text-slate-800 leading-relaxed font-serif p-8 bg-slate-50/20 rounded-xl border border-slate-100 editor-print-content"
+              dangerouslySetInnerHTML={{ __html: notes }}
+            />
           </div>
         </div>
       </div>
@@ -657,6 +654,7 @@ function App() {
           }
           .page-no-break {
             page-break-inside: avoid;
+            break-inside: avoid;
           }
           .max-w-full {
              max-width: 100% !important;
@@ -721,6 +719,21 @@ function App() {
           }
           .border {
             border-color: #e2e8f0 !important;
+          }
+
+          /* Print styles for editor content */
+          .editor-print-content font[size="1"] { font-size: 8pt !important; }
+          .editor-print-content font[size="2"] { font-size: 9pt !important; }
+          .editor-print-content font[size="3"] { font-size: 10pt !important; }
+          .editor-print-content font[size="4"] { font-size: 12pt !important; }
+          .editor-print-content font[size="5"] { font-size: 14pt !important; }
+          
+          .editor-print-content b, .editor-print-content strong { font-weight: 800 !important; }
+          .editor-print-content i, .editor-print-content em { font-style: italic !important; }
+
+          /* Reset default margins for paragraphs in print */
+          .editor-print-content p, .editor-print-content div {
+            margin-bottom: 0.5em !important;
           }
         }
       `}</style>

@@ -36,7 +36,7 @@ export function BudgetBuilder({
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
-            <div className="flex items-center justify-between no-print">
+            <div className="flex items-center justify-between no-print sticky top-20 z-20 bg-slate-50/95 backdrop-blur-sm py-4 -mx-6 px-6 border-b border-slate-100 transition-all duration-300 shadow-sm">
                 <div className="flex items-center gap-3">
                     <div className="p-2.5 bg-slate-900 text-primary-500 rounded-xl shadow-xl shadow-slate-200">
                         <Calculator size={22} />
