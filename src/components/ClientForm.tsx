@@ -112,7 +112,19 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                         </div>
                         <Input
                             value={client.phone}
-                            onChange={(e) => onChange('phone', e.target.value)}
+                            onChange={(e) => {
+                                let value = e.target.value;
+                                if (!value.startsWith('+34 ')) {
+                                    value = value.replace(/^\+?34\s?/, '');
+                                    value = '+34 ' + value;
+                                }
+                                onChange('phone', value);
+                            }}
+                            onFocus={(e) => {
+                                if (!e.target.value) {
+                                    onChange('phone', '+34 ');
+                                }
+                            }}
                             placeholder="+34 600 000 000"
                             type="tel"
                             className={`border-transparent bg-slate-50 border-b-2 rounded-none focus:ring-0 px-0 text-slate-900 font-bold placeholder:text-slate-300 placeholder:font-medium text-base transition-all h-auto py-1 ${client.phone ? (validateSpanishPhone(client.phone) ? 'border-b-emerald-500 focus:border-b-emerald-600' : 'border-b-red-500 focus:border-b-red-600') : 'border-b-slate-200 focus:border-b-primary-500'

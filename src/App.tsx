@@ -239,7 +239,7 @@ function App() {
             <div className="relative group">
               {company.logo ? (
                 <div className="bg-white p-2 rounded-xl shadow-sm border border-slate-100 group-hover:scale-105 transition-transform duration-300">
-                  <img src={company.logo} alt="Logo" className="w-16 h-16 object-contain" />
+                  <img src={company.logo} alt="Logo" className="w-20 h-20 object-contain" />
                 </div>
               ) : (
                 <div className="bg-primary-600 p-3 rounded-xl text-white shadow-xl shadow-primary-500/30 group-hover:scale-110 transition-transform duration-300">
