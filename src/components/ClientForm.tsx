@@ -1,6 +1,7 @@
 import type { Client } from '../types';
 import { Card, Input, Label } from './ui';
-import { User, MapPin, Phone, Mail, FileText, BadgeInfo, Briefcase, MapPinned } from 'lucide-react';
+import { User, MapPin, Phone, Mail, FileText, BadgeInfo, Briefcase, MapPinned, CheckCircle2, XCircle } from 'lucide-react';
+import { validateNIFOrCIF, validateSpanishPhone } from '../utils/validation';
 
 interface ClientFormProps {
     client: Client;
@@ -76,13 +77,24 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                         <div className="flex items-center gap-2">
                             <BadgeInfo size={14} className="text-primary-500" />
                             <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">D.N.I. / C.I.F.</Label>
+                            {client.dni && (
+                                validateNIFOrCIF(client.dni) ? (
+                                    <CheckCircle2 size={14} className="text-emerald-500 ml-auto" />
+                                ) : (
+                                    <XCircle size={14} className="text-red-500 ml-auto" />
+                                )
+                            )}
                         </div>
                         <Input
                             value={client.dni}
-                            onChange={(e) => onChange('dni', e.target.value)}
-                            placeholder="12345678A"
-                            className="border-transparent bg-slate-50 border-b-slate-200 rounded-none focus:ring-0 focus:border-b-primary-500 px-0 text-slate-900 font-bold placeholder:text-slate-300 placeholder:font-medium text-base transition-all h-auto py-1"
+                            onChange={(e) => onChange('dni', e.target.value.toUpperCase())}
+                            placeholder="12345678A o B12345678"
+                            className={`border-transparent bg-slate-50 border-b-2 rounded-none focus:ring-0 px-0 text-slate-900 font-bold placeholder:text-slate-300 placeholder:font-medium text-base transition-all h-auto py-1 ${client.dni ? (validateNIFOrCIF(client.dni) ? 'border-b-emerald-500 focus:border-b-emerald-600' : 'border-b-red-500 focus:border-b-red-600') : 'border-b-slate-200 focus:border-b-primary-500'
+                                }`}
                         />
+                        {client.dni && !validateNIFOrCIF(client.dni) && (
+                            <p className="text-[10px] text-red-500 font-medium mt-1">Formato inválido. Ej: 12345678Z o B12345678</p>
+                        )}
                     </div>
 
                     {/* Input Group: Phone */}
@@ -90,13 +102,25 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                         <div className="flex items-center gap-2">
                             <Phone size={14} className="text-primary-500" />
                             <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">Teléfono</Label>
+                            {client.phone && (
+                                validateSpanishPhone(client.phone) ? (
+                                    <CheckCircle2 size={14} className="text-emerald-500 ml-auto" />
+                                ) : (
+                                    <XCircle size={14} className="text-red-500 ml-auto" />
+                                )
+                            )}
                         </div>
                         <Input
                             value={client.phone}
                             onChange={(e) => onChange('phone', e.target.value)}
                             placeholder="+34 600 000 000"
-                            className="border-transparent bg-slate-50 border-b-slate-200 rounded-none focus:ring-0 focus:border-b-primary-500 px-0 text-slate-900 font-bold placeholder:text-slate-300 placeholder:font-medium text-base transition-all h-auto py-1"
+                            type="tel"
+                            className={`border-transparent bg-slate-50 border-b-2 rounded-none focus:ring-0 px-0 text-slate-900 font-bold placeholder:text-slate-300 placeholder:font-medium text-base transition-all h-auto py-1 ${client.phone ? (validateSpanishPhone(client.phone) ? 'border-b-emerald-500 focus:border-b-emerald-600' : 'border-b-red-500 focus:border-b-red-600') : 'border-b-slate-200 focus:border-b-primary-500'
+                                }`}
                         />
+                        {client.phone && !validateSpanishPhone(client.phone) && (
+                            <p className="text-[10px] text-red-500 font-medium mt-1">Formato inválido. Ej: +34 600 000 000 o 600000000</p>
+                        )}
                     </div>
 
                     {/* Input Group: Email */}
