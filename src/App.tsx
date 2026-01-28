@@ -230,6 +230,13 @@ function App() {
     }
   };
 
+  // Calculate totals for consistent use across the app
+  const totals = {
+    base: items.reduce((acc, item) => acc + (item.salePrice * item.quantity), 0),
+    get iva() { return this.base * ivaRate; },
+    get total() { return this.base * (1 + ivaRate); }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20">
       {/* Header */}
@@ -549,15 +556,15 @@ function App() {
                           <div className="text-[11px] space-y-3 text-slate-600">
                             <p className="flex justify-between border-b border-slate-50 pb-1">
                               <span>30% A la firma del contrato:</span>
-                              <span className="font-bold text-slate-900 whitespace-nowrap">{(items.reduce((acc, item) => acc + (item.salePrice * item.quantity), 0) * (1 + ivaRate) * 0.3).toLocaleString('es-ES')} €</span>
+                              <span className="font-bold text-slate-900 whitespace-nowrap">{(totals.total * 0.3).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                             </p>
                             <p className="flex justify-between border-b border-slate-50 pb-1">
                               <span>40% Al comienzo de la obra:</span>
-                              <span className="font-bold text-slate-900 whitespace-nowrap">{(items.reduce((acc, item) => acc + (item.salePrice * item.quantity), 0) * (1 + ivaRate) * 0.4).toLocaleString('es-ES')} €</span>
+                              <span className="font-bold text-slate-900 whitespace-nowrap">{(totals.total * 0.4).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                             </p>
                             <p className="flex justify-between border-b border-slate-50 pb-1">
                               <span>30% A la finalización:</span>
-                              <span className="font-bold text-slate-900 whitespace-nowrap">{(items.reduce((acc, item) => acc + (item.salePrice * item.quantity), 0) * (1 + ivaRate) * 0.3).toLocaleString('es-ES')} €</span>
+                              <span className="font-bold text-slate-900 whitespace-nowrap">{(totals.total * 0.3).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                             </p>
                           </div>
                         </div>
@@ -582,19 +589,19 @@ function App() {
                           <div className="flex justify-between items-center text-xs">
                             <span className="text-slate-500 font-bold uppercase tracking-widest">Base Imponible</span>
                             <span className="text-slate-900 font-black text-lg">
-                              {items.reduce((acc, item) => acc + (item.salePrice * item.quantity), 0).toLocaleString('es-ES')} €
+                              {totals.base.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                             </span>
                           </div>
                           <div className="flex justify-between items-center text-xs">
                             <span className="text-slate-500 font-bold uppercase tracking-widest">IVA ({(ivaRate * 100).toFixed(0)}%)</span>
                             <span className="text-slate-900 font-black text-lg">
-                              {(items.reduce((acc, item) => acc + (item.salePrice * item.quantity), 0) * ivaRate).toLocaleString('es-ES')} €
+                              {totals.iva.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                             </span>
                           </div>
                           <div className="pt-6 border-t-2 border-slate-900 flex justify-between items-center">
                             <span className="text-[12px] font-black text-primary-600 uppercase tracking-[0.2em]">TOTAL</span>
                             <span className="text-3xl font-black text-primary-600 tracking-tight whitespace-nowrap">
-                              {(items.reduce((acc, item) => acc + (item.salePrice * item.quantity), 0) * (1 + ivaRate)).toLocaleString('es-ES')} €
+                              {totals.total.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                             </span>
                           </div>
                         </div>
