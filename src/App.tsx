@@ -660,8 +660,9 @@ function App() {
             page-break-before: always;
           }
           .page-no-break {
-            page-break-inside: avoid;
-            break-inside: avoid;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            display: block !important; /* Ensure it is block level for breaking logic */
           }
           .max-w-full {
              max-width: 100% !important;

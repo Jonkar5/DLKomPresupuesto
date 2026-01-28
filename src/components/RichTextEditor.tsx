@@ -46,7 +46,10 @@ export function RichTextEditor({ value, onChange, placeholder, className = '' }:
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => execCommand('bold')}
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                        execCommand('bold');
+                    }}
                     className="h-8 w-8 p-0 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50"
                     title="Negrita (Ctrl+B)"
                 >
@@ -55,7 +58,10 @@ export function RichTextEditor({ value, onChange, placeholder, className = '' }:
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => execCommand('italic')}
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                        execCommand('italic');
+                    }}
                     className="h-8 w-8 p-0 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50"
                     title="Cursiva (Ctrl+I)"
                 >
@@ -67,7 +73,10 @@ export function RichTextEditor({ value, onChange, placeholder, className = '' }:
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => execCommand('fontSize', '1')}
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                        execCommand('fontSize', '1');
+                    }}
                     className="h-8 w-8 p-0 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50"
                     title="Texto Pequeño"
                 >
@@ -77,7 +86,10 @@ export function RichTextEditor({ value, onChange, placeholder, className = '' }:
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => execCommand('fontSize', '3')}
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                        execCommand('fontSize', '3');
+                    }}
                     className="h-8 w-8 p-0 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50"
                     title="Texto Normal"
                 >
@@ -86,7 +98,10 @@ export function RichTextEditor({ value, onChange, placeholder, className = '' }:
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => execCommand('fontSize', '5')}
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                        execCommand('fontSize', '5');
+                    }}
                     className="h-8 w-8 p-0 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50"
                     title="Texto Grande"
                 >
