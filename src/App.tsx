@@ -18,6 +18,8 @@ function App() {
     const company = saved ? JSON.parse(saved) : INITIAL_COMPANY;
     // Force default logo if missing for rebranding
     if (!company.logo) company.logo = INITIAL_COMPANY.logo;
+    // Force default signature if missing (migrating existing users)
+    if (!company.signature) company.signature = INITIAL_COMPANY.signature;
     return company;
   });
 
@@ -88,6 +90,13 @@ function App() {
   useEffect(() => {
     localStorage.setItem('budget_groups', JSON.stringify(dynamicGroups));
   }, [dynamicGroups]);
+
+  // Force signature update for existing users who might have state preserved during hot reload
+  useEffect(() => {
+    if (!company.signature) {
+      setCompany(prev => ({ ...prev, signature: INITIAL_COMPANY.signature }));
+    }
+  }, []);
 
   const handleClientChange = (field: keyof Client, value: string) => {
     setClient(prev => ({ ...prev, [field]: value }));
@@ -225,6 +234,17 @@ function App() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setCompany(prev => ({ ...prev, logo: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSignatureUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCompany(prev => ({ ...prev, signature: reader.result as string }));
       };
       reader.readAsDataURL(file);
     }
@@ -375,13 +395,28 @@ function App() {
                   <img src={company.logo} alt="Preview" className="w-24 h-auto object-contain p-2 rounded-lg border border-slate-100" />
                 )}
                 {!companyLocked && (
-                  <label className="w-full">
-                    <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
-                    <div className="w-full flex items-center justify-center gap-2 px-3 py-2 border border-dashed border-slate-200 hover:border-primary-400 hover:bg-primary-50 rounded-lg cursor-pointer transition-all text-slate-500 hover:text-primary-600 font-medium text-[10px] uppercase tracking-wider">
-                      <Upload size={14} />
-                      {company.logo ? 'Cambiar Logo' : 'Subir Logo'}
-                    </div>
-                  </label>
+                  <div className="grid grid-cols-2 gap-2 w-full">
+                    <label className="w-full">
+                      <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
+                      <div className="w-full flex items-center justify-center gap-2 px-3 py-2 border border-dashed border-slate-200 hover:border-primary-400 hover:bg-primary-50 rounded-lg cursor-pointer transition-all text-slate-500 hover:text-primary-600 font-medium text-[10px] uppercase tracking-wider text-center h-full">
+                        <Upload size={14} />
+                        {company.logo ? 'Logo' : 'Subir Logo'}
+                      </div>
+                    </label>
+                    <label className="w-full">
+                      <input type="file" accept="image/*" onChange={handleSignatureUpload} className="hidden" />
+                      <div className="w-full flex items-center justify-center gap-2 px-3 py-2 border border-dashed border-slate-200 hover:border-primary-400 hover:bg-primary-50 rounded-lg cursor-pointer transition-all text-slate-500 hover:text-primary-600 font-medium text-[10px] uppercase tracking-wider text-center h-full">
+                        <Upload size={14} />
+                        {company.signature ? 'Sello/Firma' : 'Subir Sello'}
+                      </div>
+                    </label>
+                  </div>
+                )}
+                {company.signature && (
+                  <div className="text-center w-full">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">Firma/Sello Actual</p>
+                    <img src={company.signature} alt="Signature Preview" className="w-32 h-auto object-contain mx-auto p-2 rounded-lg border border-slate-100 bg-white mix-blend-multiply" />
+                  </div>
                 )}
               </div>
 
@@ -470,8 +505,9 @@ function App() {
       </div>
 
       {/* Print-only Layout */}
-      <div className="hidden print:block font-sans text-slate-900 bg-white min-h-screen">
-        <div className="print-container p-[15mm]">
+      {/* Print-only Layout */}
+      <div className="hidden print:block font-sans text-slate-900 bg-white w-full h-auto overflow-hidden">
+        <div className="print-container p-[10mm] max-w-full">
           {/* Repeating Budget Content Container */}
           <table className="w-full">
             <thead>
@@ -574,11 +610,24 @@ function App() {
                           <p className="text-xs font-bold text-slate-900 tracking-wider font-mono">ES23 2100 3771 2022 0013 7681</p>
                         </div>
 
-                        <div className="pt-4">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">FIRMA CLIENTE</p>
-                          <div className="h-20 border border-slate-200 rounded-lg relative overflow-hidden bg-slate-50/10">
-                            <div className="absolute bottom-4 left-0 right-0 border-t border-slate-200 mx-8"></div>
-                            <span className="absolute bottom-1 left-8 text-[8px] text-slate-300 font-bold uppercase tracking-widest">Firma Autorizada</span>
+                        <div className="pt-4 grid grid-cols-2 gap-8">
+                          <div>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">FIRMA CLIENTE</p>
+                            <div className="h-24 border border-slate-200 rounded-lg relative overflow-hidden bg-slate-50/10">
+                              <div className="absolute bottom-4 left-0 right-0 border-t border-slate-200 mx-8"></div>
+                              <span className="absolute bottom-1 left-8 text-[8px] text-slate-300 font-bold uppercase tracking-widest">Firma Autorizada</span>
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">FIRMA EMPRESA</p>
+                            <div className="h-24 border border-slate-200 rounded-lg relative overflow-hidden bg-white flex items-center justify-center">
+                              {company.signature ? (
+                                <img src={company.signature} alt="Firma Empresa" className="max-h-full max-w-full object-contain mix-blend-multiply" />
+                              ) : (
+                                <div className="absolute bottom-4 left-0 right-0 border-t border-slate-200 mx-8"></div>
+                              )}
+                              {/* <span className="absolute bottom-1 left-8 text-[8px] text-slate-300 font-bold uppercase tracking-widest">Sello / Firma</span> */}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -618,13 +667,13 @@ function App() {
           </table>
 
           {/* Notes Section - Outside the repeating header table */}
-          <div className="mt-12 page-no-break pt-8">
-            <div className="flex items-center gap-3 mb-6 pb-2 border-b-2 border-slate-900">
+          <div className="mt-12 pt-8 page-break-before page-no-break">
+            <div className="flex items-center gap-3 mb-4 pb-2 border-b-2 border-slate-900">
               <FileText className="text-primary-600" size={20} />
               <h2 className="text-base font-black text-slate-900 uppercase tracking-widest">Condiciones Generales y Notas</h2>
             </div>
             <div
-              className="text-[11px] text-slate-800 leading-relaxed font-serif p-8 bg-slate-50/20 rounded-xl border border-slate-100 editor-print-content"
+              className="text-[10px] text-slate-800 leading-snug font-serif p-4 bg-slate-50/20 rounded-xl border border-slate-100 editor-print-content"
               dangerouslySetInnerHTML={{ __html: notes }}
             />
           </div>
@@ -651,10 +700,13 @@ function App() {
             color: #1e293b !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
+            height: auto !important;
+            overflow: visible !important;
           }
           .print-container {
             width: 100%;
-            overflow: visible;
+            height: auto !important;
+            overflow: hidden !important;
           }
           .page-break-before {
             page-break-before: always;

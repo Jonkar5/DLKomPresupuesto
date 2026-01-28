@@ -119,7 +119,6 @@ export function RichTextEditor({ value, onChange, placeholder, className = '' }:
                 onBlur={() => setIsFocused(false)}
                 className="min-h-[300px] p-4 outline-none font-serif text-sm leading-relaxed text-slate-700 editor-content"
                 style={{ overflowY: 'auto' }}
-                dangerouslySetInnerHTML={{ __html: value }}
             />
 
             {/* Placeholder simulation (simple css approach usually better, but for now just validation) */}

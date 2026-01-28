@@ -39,6 +39,7 @@ export type CompanyInfo = {
     email: string;
     cif: string;
     logo?: string; // Base64 string
+    signature?: string; // Base64 string for stamp/signature
 };
 
 export type Budget = {
@@ -67,7 +68,8 @@ export const INITIAL_COMPANY: CompanyInfo = {
     phone: '',
     email: 'bilbao@dlkom.com',
     cif: '',
-    logo: '/DLKomPresupuesto/logo.png',
+    logo: '/logo.png',
+    signature: '/SELLO.jpg',
 };
 
 export const DEFAULT_NOTES = `1. VALIDEZ DEL PRESUPUESTO
