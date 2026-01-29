@@ -15,27 +15,17 @@ import type { CompanyInfo, Group } from './types';
 function App() {
   const [company, setCompany] = useState<CompanyInfo>(() => {
     const saved = localStorage.getItem('budget_company');
-    const parsedCompany = saved ? JSON.parse(saved) : {};
-
-    // Merge INITIAL_COMPANY with any saved data, but skip empty strings in saved data 
-    // to prevent them from overwriting our hardcoded defaults unintentionally
-    const mergedCompany = { ...INITIAL_COMPANY };
-
     if (saved) {
-      Object.keys(parsedCompany).forEach(key => {
-        const val = parsedCompany[key as keyof CompanyInfo];
-        if (val && val.toString().trim() !== "") {
-          (mergedCompany as any)[key] = val;
-        }
-      });
+      try {
+        const parsed = JSON.parse(saved);
+        // If we found saved data, verify it has at least a name or something relevant.
+        // We merged with INITIAL_COMPANY to ensure structure, but we PRIORITIZE saved data.
+        return { ...INITIAL_COMPANY, ...parsed };
+      } catch (e) {
+        console.error("Failed to parse company data", e);
+      }
     }
-
-    return {
-      ...mergedCompany,
-      // Ensure logo/signature defaults are used ONLY if they are missing or invalid in the saved data
-      logo: (parsedCompany.logo && parsedCompany.logo.length > 50) ? parsedCompany.logo : INITIAL_COMPANY.logo,
-      signature: (parsedCompany.signature && parsedCompany.signature.length > 50) ? parsedCompany.signature : INITIAL_COMPANY.signature
-    };
+    return INITIAL_COMPANY;
   });
 
   const [ivaRate, setIvaRate] = useState<number>(() => {
@@ -664,7 +654,7 @@ function App() {
 
                       {/* Company Stamp - Smaller Image */}
                       <div className="flex-1 flex flex-col items-end">
-                        <div className="h-20 w-full relative flex items-center justify-end">
+                        <div className="h-16 w-full relative flex items-center justify-end">
                           {company.signature ? (
                             <img src={company.signature} alt="Firma Empresa" className="h-full object-contain mix-blend-multiply opacity-95 rotate-[-1deg] mr-4" style={{ maxWidth: '100%' }} />
                           ) : (
