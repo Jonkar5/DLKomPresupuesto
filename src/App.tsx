@@ -16,10 +16,9 @@ function App() {
   const [company, setCompany] = useState<CompanyInfo>(() => {
     const saved = localStorage.getItem('budget_company');
     const company = saved ? JSON.parse(saved) : INITIAL_COMPANY;
-    // Force default logo if missing for rebranding
-    if (!company.logo) company.logo = INITIAL_COMPANY.logo;
-    // Force default signature if missing (migrating existing users)
-    if (!company.signature) company.signature = INITIAL_COMPANY.signature;
+    // Always use GitHub URLs for logo and signature to persist across devices
+    company.logo = INITIAL_COMPANY.logo;
+    company.signature = INITIAL_COMPANY.signature;
     return company;
   });
 
@@ -91,11 +90,13 @@ function App() {
     localStorage.setItem('budget_groups', JSON.stringify(dynamicGroups));
   }, [dynamicGroups]);
 
-  // Force signature update for existing users who might have state preserved during hot reload
+  // Always ensure logo and signature use GitHub URLs
   useEffect(() => {
-    if (!company.signature) {
-      setCompany(prev => ({ ...prev, signature: INITIAL_COMPANY.signature }));
-    }
+    setCompany(prev => ({
+      ...prev,
+      logo: INITIAL_COMPANY.logo,
+      signature: INITIAL_COMPANY.signature
+    }));
   }, []);
 
   const handleClientChange = (field: keyof Client, value: string) => {
@@ -610,23 +611,22 @@ function App() {
                           <p className="text-xs font-bold text-slate-900 tracking-wider font-mono">ES23 2100 3771 2022 0013 7681</p>
                         </div>
 
-                        <div className="pt-4 grid grid-cols-2 gap-8">
+                        <div className="pt-6 grid grid-cols-2 gap-16">
                           <div>
                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">FIRMA CLIENTE</p>
-                            <div className="h-24 border border-slate-200 rounded-lg relative overflow-hidden bg-slate-50/10">
-                              <div className="absolute bottom-4 left-0 right-0 border-t border-slate-200 mx-8"></div>
-                              <span className="absolute bottom-1 left-8 text-[8px] text-slate-300 font-bold uppercase tracking-widest">Firma Autorizada</span>
+                            <div className="h-32 border-2 border-slate-300 rounded-lg relative overflow-hidden bg-slate-50/10">
+                              <div className="absolute bottom-6 left-0 right-0 border-t-2 border-slate-300 mx-6"></div>
+                              <span className="absolute bottom-2 left-6 text-[8px] text-slate-400 font-bold uppercase tracking-widest">Firma Autorizada</span>
                             </div>
                           </div>
                           <div>
                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">FIRMA EMPRESA</p>
-                            <div className="h-24 border border-slate-200 rounded-lg relative overflow-hidden bg-white flex items-center justify-center">
+                            <div className="h-32 border-2 border-slate-300 rounded-lg relative overflow-hidden bg-white flex items-center justify-center p-2">
                               {company.signature ? (
                                 <img src={company.signature} alt="Firma Empresa" className="max-h-full max-w-full object-contain mix-blend-multiply" />
                               ) : (
-                                <div className="absolute bottom-4 left-0 right-0 border-t border-slate-200 mx-8"></div>
+                                <div className="absolute bottom-6 left-0 right-0 border-t-2 border-slate-300 mx-6"></div>
                               )}
-                              {/* <span className="absolute bottom-1 left-8 text-[8px] text-slate-300 font-bold uppercase tracking-widest">Sello / Firma</span> */}
                             </div>
                           </div>
                         </div>
@@ -686,8 +686,8 @@ function App() {
       <style>{`
         @media print {
           @page {
-            size: auto;
-            margin: 0;
+            size: A4;
+            margin: 15mm 20mm;
           }
           header, .no-print, button, .sticky, textarea::placeholder, .fixed, .max-w-7xl + div {
             display: none !important;
@@ -706,7 +706,8 @@ function App() {
           .print-container {
             width: 100%;
             height: auto !important;
-            overflow: hidden !important;
+            overflow: visible !important;
+            padding: 0 !important;
           }
           .page-break-before {
             page-break-before: always;
