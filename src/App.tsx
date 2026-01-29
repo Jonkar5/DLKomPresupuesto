@@ -16,13 +16,16 @@ function App() {
   const [company, setCompany] = useState<CompanyInfo>(() => {
     const saved = localStorage.getItem('budget_company');
     const parsedCompany = saved ? JSON.parse(saved) : {};
-    // Always merge with INITIAL_COMPANY to ensure defaults persist
+
+    // If we have saved data, use it but fill missing fields with defaults.
+    // If it's a fresh load (no saved data), use defaults.
+    // This ENSURES data persists even on new devices or after cache clear.
     return {
       ...INITIAL_COMPANY,
       ...parsedCompany,
-      // Force logo and signature from GitHub
-      logo: INITIAL_COMPANY.logo,
-      signature: INITIAL_COMPANY.signature
+      // Ensure logo/signature defaults are used ONLY if they are missing in the saved data
+      logo: parsedCompany.logo || INITIAL_COMPANY.logo,
+      signature: parsedCompany.signature || INITIAL_COMPANY.signature
     };
   });
 
@@ -94,15 +97,8 @@ function App() {
     localStorage.setItem('budget_groups', JSON.stringify(dynamicGroups));
   }, [dynamicGroups]);
 
-  // Always ensure company data merges with defaults
-  useEffect(() => {
-    setCompany(prev => ({
-      ...INITIAL_COMPANY,
-      ...prev,
-      logo: INITIAL_COMPANY.logo,
-      signature: INITIAL_COMPANY.signature
-    }));
-  }, []);
+  // Removed the useEffect that was forcing defaults on every re-render/mount
+  // to allows users to keep their uploaded logos/signatures during the session
 
   const handleClientChange = (field: keyof Client, value: string) => {
     setClient(prev => ({ ...prev, [field]: value }));
@@ -616,21 +612,21 @@ function App() {
                           <p className="text-xs font-bold text-slate-900 tracking-wider font-mono">ES23 2100 3771 2022 0013 7681</p>
                         </div>
 
-                        <div className="pt-6 space-y-6">
-                          <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">FIRMA CLIENTE</p>
-                            <div className="h-20 border-2 border-slate-300 rounded-xl relative overflow-hidden bg-slate-50/10">
-                              <div className="absolute bottom-4 left-0 right-0 border-t-2 border-slate-300 mx-12"></div>
-                              <span className="absolute bottom-1 left-12 text-[8px] text-slate-400 font-black uppercase tracking-widest italic">Acepto condiciones - Firma y Fecha</span>
+                        <div className="pt-6 flex flex-row gap-6 items-start w-full">
+                          <div className="w-1/2">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">FIRMA CLIENTE</p>
+                            <div className="h-24 border-2 border-slate-300 rounded-xl relative overflow-hidden bg-slate-50/10">
+                              <div className="absolute bottom-4 left-0 right-0 border-t-2 border-slate-300 mx-6"></div>
+                              <span className="absolute bottom-1 left-6 text-[7px] text-slate-400 font-black uppercase tracking-widest italic">Acepto condiciones</span>
                             </div>
                           </div>
-                          <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">FIRMA Y SELLO EMPRESA</p>
-                            <div className="h-20 border-2 border-slate-300 rounded-xl relative overflow-hidden bg-white flex items-center justify-center p-2">
+                          <div className="w-1/2">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 text-right">FIRMA EMPRESA</p>
+                            <div className="h-24 border-2 border-slate-300 rounded-xl relative overflow-hidden bg-white flex items-center justify-center p-2">
                               {company.signature ? (
                                 <img src={company.signature} alt="Firma Empresa" className="max-h-full max-w-full object-contain mix-blend-multiply" />
                               ) : (
-                                <div className="absolute bottom-4 left-0 right-0 border-t-2 border-slate-300 mx-12"></div>
+                                <div className="absolute bottom-4 left-0 right-0 border-t-2 border-slate-300 mx-6"></div>
                               )}
                             </div>
                           </div>
@@ -692,17 +688,14 @@ function App() {
         @media print {
           @page {
             size: A4;
-            margin: 15mm 20mm;
-          }
-          @page :first {
-            margin-top: 10mm;
+            margin: 0 !important;
           }
           header, .no-print, button, .sticky, textarea::placeholder, .fixed, .max-w-7xl + div {
             display: none !important;
           }
           body {
             background: white !important;
-            padding: 0 !important;
+            padding: 15mm 20mm !important; /* Internal padding simulates margins */
             margin: 0 !important;
             font-size: 10pt;
             color: #1e293b !important;
@@ -711,16 +704,12 @@ function App() {
             height: auto !important;
             overflow: visible !important;
           }
+          /* Specific padding for first page if needed, but body padding usually handles it */
           .print-container {
             width: 100%;
             height: auto !important;
             overflow: visible !important;
             padding: 0 !important;
-          }
-          /* Hide browser-generated headers and footers */
-          @page {
-            margin-header: 0;
-            margin-footer: 0;
           }
           .page-break-before {
             page-break-before: always;
