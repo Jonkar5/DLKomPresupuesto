@@ -65,9 +65,9 @@ export const INITIAL_CLIENT: Client = {
 export const INITIAL_COMPANY: CompanyInfo = {
     name: 'DLKom',
     address: 'Garaizar nº 4 - 1º',
-    phone: '',
+    phone: '944 15 66 77',
     email: 'bilbao@dlkom.com',
-    cif: '',
+    cif: 'B95123456',
     logo: '/DLKomPresupuesto/logo.png',
     signature: '/DLKomPresupuesto/SELLO.jpg',
 };

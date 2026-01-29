@@ -15,11 +15,15 @@ import type { CompanyInfo, Group } from './types';
 function App() {
   const [company, setCompany] = useState<CompanyInfo>(() => {
     const saved = localStorage.getItem('budget_company');
-    const company = saved ? JSON.parse(saved) : INITIAL_COMPANY;
-    // Always use GitHub URLs for logo and signature to persist across devices
-    company.logo = INITIAL_COMPANY.logo;
-    company.signature = INITIAL_COMPANY.signature;
-    return company;
+    const parsedCompany = saved ? JSON.parse(saved) : {};
+    // Always merge with INITIAL_COMPANY to ensure defaults persist
+    return {
+      ...INITIAL_COMPANY,
+      ...parsedCompany,
+      // Force logo and signature from GitHub
+      logo: INITIAL_COMPANY.logo,
+      signature: INITIAL_COMPANY.signature
+    };
   });
 
   const [ivaRate, setIvaRate] = useState<number>(() => {
@@ -90,9 +94,10 @@ function App() {
     localStorage.setItem('budget_groups', JSON.stringify(dynamicGroups));
   }, [dynamicGroups]);
 
-  // Always ensure logo and signature use GitHub URLs
+  // Always ensure company data merges with defaults
   useEffect(() => {
     setCompany(prev => ({
+      ...INITIAL_COMPANY,
       ...prev,
       logo: INITIAL_COMPANY.logo,
       signature: INITIAL_COMPANY.signature
@@ -611,21 +616,21 @@ function App() {
                           <p className="text-xs font-bold text-slate-900 tracking-wider font-mono">ES23 2100 3771 2022 0013 7681</p>
                         </div>
 
-                        <div className="pt-6 grid grid-cols-2 gap-16">
+                        <div className="pt-6 space-y-6">
                           <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">FIRMA CLIENTE</p>
-                            <div className="h-32 border-2 border-slate-300 rounded-lg relative overflow-hidden bg-slate-50/10">
-                              <div className="absolute bottom-6 left-0 right-0 border-t-2 border-slate-300 mx-6"></div>
-                              <span className="absolute bottom-2 left-6 text-[8px] text-slate-400 font-bold uppercase tracking-widest">Firma Autorizada</span>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">FIRMA CLIENTE</p>
+                            <div className="h-20 border-2 border-slate-300 rounded-xl relative overflow-hidden bg-slate-50/10">
+                              <div className="absolute bottom-4 left-0 right-0 border-t-2 border-slate-300 mx-12"></div>
+                              <span className="absolute bottom-1 left-12 text-[8px] text-slate-400 font-black uppercase tracking-widest italic">Acepto condiciones - Firma y Fecha</span>
                             </div>
                           </div>
                           <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">FIRMA EMPRESA</p>
-                            <div className="h-32 border-2 border-slate-300 rounded-lg relative overflow-hidden bg-white flex items-center justify-center p-2">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">FIRMA Y SELLO EMPRESA</p>
+                            <div className="h-20 border-2 border-slate-300 rounded-xl relative overflow-hidden bg-white flex items-center justify-center p-2">
                               {company.signature ? (
                                 <img src={company.signature} alt="Firma Empresa" className="max-h-full max-w-full object-contain mix-blend-multiply" />
                               ) : (
-                                <div className="absolute bottom-6 left-0 right-0 border-t-2 border-slate-300 mx-6"></div>
+                                <div className="absolute bottom-4 left-0 right-0 border-t-2 border-slate-300 mx-12"></div>
                               )}
                             </div>
                           </div>
@@ -689,6 +694,9 @@ function App() {
             size: A4;
             margin: 15mm 20mm;
           }
+          @page :first {
+            margin-top: 10mm;
+          }
           header, .no-print, button, .sticky, textarea::placeholder, .fixed, .max-w-7xl + div {
             display: none !important;
           }
@@ -708,6 +716,11 @@ function App() {
             height: auto !important;
             overflow: visible !important;
             padding: 0 !important;
+          }
+          /* Hide browser-generated headers and footers */
+          @page {
+            margin-header: 0;
+            margin-footer: 0;
           }
           .page-break-before {
             page-break-before: always;
