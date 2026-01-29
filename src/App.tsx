@@ -295,8 +295,8 @@ function App() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="ghost" onClick={resetBudget} className="text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all rounded-xl h-11 px-5 border border-transparent hover:border-red-500/20">
-              <Trash2 size={18} />
+            <Button variant="ghost" onClick={resetBudget} className="text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all rounded-xl h-11 px-4 border border-transparent hover:border-red-500/20">
+              <Trash2 size={15} />
               <span className="hidden md:inline font-bold ml-2">Reiniciar</span>
             </Button>
             <div className="w-px h-8 bg-slate-800 mx-2 hidden md:block"></div>
@@ -313,11 +313,11 @@ function App() {
               variant="secondary"
               onClick={() => setShowPrices(!showPrices)}
               className={cn(
-                "rounded-xl h-11 px-6 shadow-xl transition-all font-bold border",
+                "rounded-xl h-11 px-5 shadow-xl transition-all font-bold border text-xs",
                 showPrices ? "bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700" : "bg-primary-600 border-primary-500 text-white hover:bg-primary-500"
               )}
             >
-              {showPrices ? <Eye size={18} /> : <EyeOff size={18} />}
+              {showPrices ? <Eye size={15} /> : <EyeOff size={15} />}
               <span className="hidden md:inline ml-2">{showPrices ? 'Mostrar Precios' : 'Ocultar Precios'}</span>
             </Button>
             <Button variant="secondary" onClick={handlePrint} className="bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white rounded-xl h-11 px-6 shadow-xl transition-all font-bold">
@@ -327,8 +327,8 @@ function App() {
 
             <label className="cursor-pointer">
               <input type="file" accept=".json" onChange={importBudget} className="hidden" />
-              <div className="flex items-center bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600 rounded-xl h-11 px-6 shadow-sm transition-all font-bold group" title="Cargar un presupuesto guardado anteriormente">
-                <Upload size={18} className="group-hover:translate-y-0.5 transition-transform" />
+              <div className="flex items-center bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600 rounded-xl h-11 px-4 shadow-sm transition-all font-bold group text-xs text-center" title="Cargar un presupuesto guardado anteriormente">
+                <Upload size={15} className="group-hover:translate-y-0.5 transition-transform" />
                 <span className="hidden md:inline ml-2">Importar</span>
               </div>
             </label>
@@ -338,12 +338,12 @@ function App() {
             <Button
               onClick={handleManualSave}
               className={cn(
-                "rounded-xl h-11 px-6 shadow-xl shadow-primary-500/30 font-bold transition-all hover:scale-[1.02] active:scale-95 group",
+                "rounded-xl h-11 px-5 shadow-xl shadow-primary-500/30 font-bold transition-all hover:scale-[1.02] active:scale-95 group text-xs",
                 saveStatus ? "bg-emerald-600 hover:bg-emerald-500" : "bg-primary-600 hover:bg-primary-500"
               )}
               title="Guardar este presupuesto como archivo en tu ordenador"
             >
-              {saveStatus ? <Check size={18} /> : <Save size={18} className="group-hover:rotate-12 transition-transform" />}
+              {saveStatus ? <Check size={15} /> : <Save size={15} className="group-hover:rotate-12 transition-transform" />}
               <span className="hidden md:inline ml-2">{saveStatus ? '¡Guardado!' : 'Guardar en PC'}</span>
             </Button>
           </div>
@@ -432,7 +432,18 @@ function App() {
                 )}
               </div>
 
-              <div className="space-y-3">
+              <div className="pt-2">
+                <Button
+                  onClick={() => setShowPaymentEditor(true)}
+                  variant="secondary"
+                  className="w-full bg-slate-50 border-slate-100 text-slate-600 hover:bg-primary-50 hover:text-primary-600 hover:border-primary-200 text-[10px] font-bold uppercase tracking-widest h-10 shadow-sm transition-all"
+                >
+                  <Settings size={14} />
+                  Configurar Pagos
+                </Button>
+              </div>
+
+              <div className="space-y-3 pt-2">
                 <div className="space-y-1">
                   <label className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Nombre Comercial</label>
                   <input
@@ -670,13 +681,13 @@ function App() {
                         </div>
                       </div>
 
-                      {/* Company Stamp - Smaller Image (h-10) */}
+                      {/* Company Stamp - Smaller Image (h-8) */}
                       <div className="flex-1 flex flex-col items-end">
-                        <div className="h-10 w-full relative flex items-center justify-end">
+                        <div className="h-8 w-full relative flex items-center justify-end">
                           {company.signature ? (
                             <img src={company.signature} alt="Firma Empresa" className="h-full object-contain mix-blend-multiply opacity-95 rotate-[-1deg] mr-4" style={{ maxWidth: '100%' }} />
                           ) : (
-                            <div className="w-24 h-10 border border-dashed border-slate-200 rounded flex items-center justify-center">
+                            <div className="w-24 h-8 border border-dashed border-slate-200 rounded flex items-center justify-center">
                               <span className="text-[7px] text-slate-300 uppercase">Sin Sello</span>
                             </div>
                           )}
