@@ -593,83 +593,83 @@ function App() {
                     </tbody>
                   </table>
 
-                  {/* Totals & Payments Section */}
-                  <div className="mt-6 pt-4 border-t border-slate-200 page-no-break">
-                    <div className="grid grid-cols-2 gap-8 items-start">
-                      {/* Payment Terms (Left) - More compact */}
-                      <div className="space-y-4">
+                  {/* Totals & Payments Section - Ultra Compact Edition */}
+                  <div className="mt-4 pt-2 border-t border-slate-200 page-no-break">
+                    <div className="grid grid-cols-2 gap-4 items-start">
+                      {/* Payment Terms (Left) - Ultra compact */}
+                      <div className="space-y-3">
                         <div>
-                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2">FORMA DE PAGO</p>
-                          <div className="text-[10px] space-y-2 text-slate-600">
-                            <p className="flex justify-between border-b border-slate-50 pb-1">
+                          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1">FORMA DE PAGO</p>
+                          <div className="text-[9px] space-y-1 text-slate-600">
+                            <p className="flex justify-between border-b border-slate-50 pb-0.5">
                               <span>30% A la firma del contrato:</span>
                               <span className="font-bold text-slate-900 whitespace-nowrap">{(totals.total * 0.3).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                             </p>
-                            <p className="flex justify-between border-b border-slate-50 pb-1">
+                            <p className="flex justify-between border-b border-slate-50 pb-0.5">
                               <span>40% Al comienzo de la obra:</span>
                               <span className="font-bold text-slate-900 whitespace-nowrap">{(totals.total * 0.4).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                             </p>
-                            <p className="flex justify-between border-b border-slate-50 pb-1">
+                            <p className="flex justify-between border-b border-slate-50 pb-0.5">
                               <span>30% A la finalización:</span>
                               <span className="font-bold text-slate-900 whitespace-nowrap">{(totals.total * 0.3).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                             </p>
                           </div>
                         </div>
 
-                        <div className="bg-slate-50 p-4 rounded-xl">
-                          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1">Nº DE CUENTA (LA CAIXA)</p>
-                          <p className="text-xs font-bold text-slate-900 tracking-wider font-mono">ES23 2100 3771 2022 0013 7681</p>
+                        <div className="bg-slate-50/50 p-2 rounded-lg border border-slate-100">
+                          <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Nº DE CUENTA (LA CAIXA)</p>
+                          <p className="text-[10px] font-bold text-slate-900 tracking-wider font-mono">ES23 2100 3771 2022 0013 7681</p>
                         </div>
                       </div>
 
-                      {/* Totals Breakdown (Right) - More compact */}
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-center text-[10px]">
+                      {/* Totals Breakdown (Right) - Ultra compact */}
+                      <div className="space-y-3">
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center text-[8px]">
                             <span className="text-slate-500 font-bold uppercase tracking-widest">Base Imponible</span>
-                            <span className="text-slate-900 font-bold text-base">
+                            <span className="text-slate-900 font-bold text-sm">
                               {totals.base.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                             </span>
                           </div>
-                          <div className="flex justify-between items-center text-[10px]">
+                          <div className="flex justify-between items-center text-[8px]">
                             <span className="text-slate-500 font-bold uppercase tracking-widest">IVA ({(ivaRate * 100).toFixed(0)}%)</span>
-                            <span className="text-slate-900 font-bold text-base">
+                            <span className="text-slate-900 font-bold text-sm">
                               {totals.iva.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                             </span>
                           </div>
-                          <div className="pt-4 border-t-2 border-slate-900 flex justify-between items-center">
-                            <span className="text-[10px] font-black text-primary-600 uppercase tracking-[0.2em]">TOTAL</span>
-                            <span className="text-2xl font-black text-primary-600 tracking-tight whitespace-nowrap">
+                          <div className="pt-2 border-t border-slate-900 flex justify-between items-center">
+                            <span className="text-[9px] font-black text-primary-600 uppercase tracking-[0.2em]">TOTAL</span>
+                            <span className="text-xl font-black text-primary-600 tracking-tight whitespace-nowrap">
                               {totals.total.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                             </span>
                           </div>
                         </div>
-                        <p className="text-[8px] text-slate-400 text-right italic leading-tight">
+                        <p className="text-[7px] text-slate-400 text-right italic leading-tight">
                           Este presupuesto tiene una validez de 15 días.<br />
                           Todos los precios incluyen materiales y mano de obra.
                         </p>
                       </div>
                     </div>
 
-                    {/* Signatures Row - Full Width Outside the Grid */}
-                    <div className="mt-8 flex flex-row justify-between items-end w-full gap-12">
-                      {/* Client Signature - Boxed */}
-                      <div className="flex-1">
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 pl-2">FIRMA CLIENTE</p>
-                        <div className="h-24 border-2 border-slate-200 rounded-xl relative overflow-hidden bg-slate-50/5 w-full">
-                          <div className="absolute bottom-5 left-0 right-0 border-t border-slate-300 mx-6"></div>
-                          <span className="absolute bottom-1.5 left-6 text-[7px] text-slate-400 font-bold uppercase tracking-widest italic">Acepto condiciones</span>
+                    {/* Signatures Row - Ultra Compact & Full Width */}
+                    <div className="mt-6 flex flex-row justify-between items-end w-full gap-8">
+                      {/* Client Signature - Boxed & Smaller */}
+                      <div className="flex-1 max-w-[45%]">
+                        <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1 pl-2">FIRMA CLIENTE</p>
+                        <div className="h-16 border border-slate-200 rounded-lg relative overflow-hidden bg-slate-50/5 w-full">
+                          <div className="absolute bottom-4 left-0 right-0 border-t border-slate-200 mx-4"></div>
+                          <span className="absolute bottom-1 left-4 text-[6px] text-slate-400 font-bold uppercase tracking-widest italic">Acepto condiciones</span>
                         </div>
                       </div>
 
-                      {/* Company Stamp - Borderless Image */}
+                      {/* Company Stamp - Smaller Image */}
                       <div className="flex-1 flex flex-col items-end">
-                        <div className="h-28 w-full relative flex items-center justify-end">
+                        <div className="h-20 w-full relative flex items-center justify-end">
                           {company.signature ? (
-                            <img src={company.signature} alt="Firma Empresa" className="h-full object-contain mix-blend-multiply opacity-95 rotate-[-1deg] mr-8" style={{ maxWidth: '100%' }} />
+                            <img src={company.signature} alt="Firma Empresa" className="h-full object-contain mix-blend-multiply opacity-95 rotate-[-1deg] mr-4" style={{ maxWidth: '100%' }} />
                           ) : (
-                            <div className="w-32 h-16 border-2 border-dashed border-slate-200 rounded flex items-center justify-center">
-                              <span className="text-[8px] text-slate-300 uppercase">Sin Sello</span>
+                            <div className="w-24 h-12 border border-dashed border-slate-200 rounded flex items-center justify-center">
+                              <span className="text-[7px] text-slate-300 uppercase">Sin Sello</span>
                             </div>
                           )}
                         </div>
