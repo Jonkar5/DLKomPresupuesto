@@ -612,23 +612,28 @@ function App() {
                           <p className="text-xs font-bold text-slate-900 tracking-wider font-mono">ES23 2100 3771 2022 0013 7681</p>
                         </div>
 
-                        <div className="pt-6 flex flex-row gap-6 items-start w-full">
-                          <div className="w-1/2">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">FIRMA CLIENTE</p>
-                            <div className="h-24 border-2 border-slate-300 rounded-xl relative overflow-hidden bg-slate-50/10">
-                              <div className="absolute bottom-4 left-0 right-0 border-t-2 border-slate-300 mx-6"></div>
-                              <span className="absolute bottom-1 left-6 text-[7px] text-slate-400 font-black uppercase tracking-widest italic">Acepto condiciones</span>
+                        <div className="pt-8 flex flex-row justify-between items-end w-full gap-8">
+                          {/* Client Signature - Boxed */}
+                          <div className="flex-1 max-w-[50%]">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 pl-2">FIRMA CLIENTE</p>
+                            <div className="h-28 border-2 border-slate-300 rounded-xl relative overflow-hidden bg-slate-50/10 w-full">
+                              <div className="absolute bottom-6 left-0 right-0 border-t-2 border-slate-300 mx-6"></div>
+                              <span className="absolute bottom-2 left-6 text-[8px] text-slate-400 font-bold uppercase tracking-widest italic">Acepto condiciones</span>
                             </div>
                           </div>
-                          <div className="w-1/2">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 text-right">FIRMA EMPRESA</p>
-                            <div className="h-24 border-2 border-slate-300 rounded-xl relative overflow-hidden bg-white flex items-center justify-center p-2">
+
+                          {/* Company Stamp - Borderless Image */}
+                          <div className="flex-1 max-w-[40%] flex flex-col items-end">
+                            <div className="h-32 w-full relative flex items-center justify-end pr-4">
                               {company.signature ? (
-                                <img src={company.signature} alt="Firma Empresa" className="max-h-full max-w-full object-contain mix-blend-multiply" />
+                                <img src={company.signature} alt="Firma Empresa" className="h-full object-contain mix-blend-multiply opacity-90 rotate-[-2deg]" style={{ maxWidth: '100%' }} />
                               ) : (
-                                <div className="absolute bottom-4 left-0 right-0 border-t-2 border-slate-300 mx-6"></div>
+                                <div className="w-40 h-20 border-2 border-dashed border-slate-300 rounded flex items-center justify-center">
+                                  <span className="text-[9px] text-slate-400 uppercase">Sin Sello</span>
+                                </div>
                               )}
                             </div>
+                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-2 pr-2">DLKom Presupuestos y Reformas</p>
                           </div>
                         </div>
                       </div>
