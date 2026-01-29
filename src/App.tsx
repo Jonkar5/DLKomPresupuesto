@@ -7,10 +7,11 @@ import { SummaryCard } from './components/SummaryCard';
 import { AreaCalculator } from './components/AreaCalculator';
 import { RichTextEditor } from './components/RichTextEditor';
 import { Button, cn } from './components/ui';
-import { Save, Trash2, Printer, Plus, Upload, Building2, FileText, Eye, EyeOff, Calculator, Lock, Unlock, Check } from 'lucide-react';
+import { Save, Trash2, Printer, Plus, Upload, Building2, FileText, Eye, EyeOff, Calculator, Lock, Unlock, Check, Settings } from 'lucide-react';
 import { GROUPS } from './data/categories';
-import { INITIAL_COMPANY, DEFAULT_NOTES } from './types';
-import type { CompanyInfo, Group } from './types';
+import { INITIAL_COMPANY, DEFAULT_NOTES, INITIAL_PAYMENT_TERMS } from './types';
+import type { CompanyInfo, Group, PaymentTerm } from './types';
+import { PaymentTermsEditor } from './components/PaymentTermsEditor';
 
 function App() {
   const [company, setCompany] = useState<CompanyInfo>(() => {
@@ -57,6 +58,16 @@ function App() {
     const saved = localStorage.getItem('budget_company_locked');
     return saved ? JSON.parse(saved) : true;
   });
+
+  const [paymentTerms, setPaymentTerms] = useState<PaymentTerm[]>(() => {
+    const saved = localStorage.getItem('budget_payment_terms');
+    return saved ? JSON.parse(saved) : INITIAL_PAYMENT_TERMS;
+  });
+  const [showPaymentEditor, setShowPaymentEditor] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('budget_payment_terms', JSON.stringify(paymentTerms));
+  }, [paymentTerms]);
 
   const [dynamicGroups, setDynamicGroups] = useState<Group[]>(() => {
     const saved = localStorage.getItem('budget_groups');
@@ -588,21 +599,28 @@ function App() {
                     <div className="grid grid-cols-2 gap-4 items-start">
                       {/* Payment Terms (Left) - Ultra compact */}
                       <div className="space-y-3">
+                        {/* Payment Terms (Left) - Ultra compact & Dynamic */}
                         <div>
-                          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1">FORMA DE PAGO</p>
-                          <div className="text-[9px] space-y-1 text-slate-600">
-                            <p className="flex justify-between border-b border-slate-50 pb-0.5">
-                              <span>30% A la firma del contrato:</span>
-                              <span className="font-bold text-slate-900 whitespace-nowrap">{(totals.total * 0.3).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
-                            </p>
-                            <p className="flex justify-between border-b border-slate-50 pb-0.5">
-                              <span>40% Al comienzo de la obra:</span>
-                              <span className="font-bold text-slate-900 whitespace-nowrap">{(totals.total * 0.4).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
-                            </p>
-                            <p className="flex justify-between border-b border-slate-50 pb-0.5">
-                              <span>30% A la finalización:</span>
-                              <span className="font-bold text-slate-900 whitespace-nowrap">{(totals.total * 0.3).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
-                            </p>
+                          <div className="flex justify-between items-center mb-1">
+                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">FORMA DE PAGO</p>
+                            <button
+                              onClick={() => setShowPaymentEditor(true)}
+                              className="no-print text-slate-400 hover:text-slate-600"
+                              title="Configurar pagos"
+                            >
+                              <Settings size={12} />
+                            </button>
+                          </div>
+
+                          <div className="text-[9px] text-slate-600 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+                            {paymentTerms.map((term) => (
+                              <div key={term.id} className="contents border-b border-slate-50">
+                                <span className="whitespace-nowrap pb-0.5 border-b border-slate-50/50">{term.percentage}% {term.label}:</span>
+                                <span className="font-bold text-slate-900 whitespace-nowrap text-right pb-0.5 border-b border-slate-50/50">
+                                  {(totals.total * (term.percentage / 100)).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+                                </span>
+                              </div>
+                            ))}
                           </div>
                         </div>
 
@@ -652,13 +670,13 @@ function App() {
                         </div>
                       </div>
 
-                      {/* Company Stamp - Smaller Image */}
+                      {/* Company Stamp - Smaller Image (h-10) */}
                       <div className="flex-1 flex flex-col items-end">
-                        <div className="h-16 w-full relative flex items-center justify-end">
+                        <div className="h-10 w-full relative flex items-center justify-end">
                           {company.signature ? (
                             <img src={company.signature} alt="Firma Empresa" className="h-full object-contain mix-blend-multiply opacity-95 rotate-[-1deg] mr-4" style={{ maxWidth: '100%' }} />
                           ) : (
-                            <div className="w-24 h-12 border border-dashed border-slate-200 rounded flex items-center justify-center">
+                            <div className="w-24 h-10 border border-dashed border-slate-200 rounded flex items-center justify-center">
                               <span className="text-[7px] text-slate-300 uppercase">Sin Sello</span>
                             </div>
                           )}
@@ -806,6 +824,12 @@ function App() {
           }
         }
       `}</style>
+      <PaymentTermsEditor
+        terms={paymentTerms}
+        onChange={setPaymentTerms}
+        isOpen={showPaymentEditor}
+        onClose={() => setShowPaymentEditor(false)}
+      />
     </div>
   );
 }

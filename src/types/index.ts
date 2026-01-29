@@ -42,6 +42,12 @@ export type CompanyInfo = {
     signature?: string; // Base64 string for stamp/signature
 };
 
+export type PaymentTerm = {
+    id: string;
+    percentage: number;
+    label: string;
+};
+
 export type Budget = {
     id: string;
     client: Client;
@@ -71,6 +77,12 @@ export const INITIAL_COMPANY: CompanyInfo = {
     logo: '/DLKomPresupuesto/logo.png',
     signature: '/DLKomPresupuesto/SELLO.jpg',
 };
+
+export const INITIAL_PAYMENT_TERMS: PaymentTerm[] = [
+    { id: '1', percentage: 30, label: 'A la firma del contrato' },
+    { id: '2', percentage: 40, label: 'Al comienzo de la obra' },
+    { id: '3', percentage: 30, label: 'A la finalización' },
+];
 
 export const DEFAULT_NOTES = `1. VALIDEZ DEL PRESUPUESTO
 El presente presupuesto tiene una validez de 30 días naturales a partir de su fecha de emisión.
