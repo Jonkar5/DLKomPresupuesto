@@ -87,4 +87,7 @@ El plazo estimado de ejecución se acordará de mutuo acuerdo tras la firma. Ret
 DLKom garantiza sus trabajos según la legislación vigente (LOE). La garantía no cubre desperfectos debidos a un uso inadecuado o falta de mantenimiento.
 
 5. DATOS BANCARIOS
-CUENTA: ES23 2100 3771 2022 0013 7681`;
+CUENTA: ES23 2100 3771 2022 0013 7681
+
+6. CONFIDENCIALIDAD
+Los datos facilitados serán tratados con estricta confidencialidad de acuerdo con la LOPD.`;

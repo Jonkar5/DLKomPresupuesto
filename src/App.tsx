@@ -17,15 +17,24 @@ function App() {
     const saved = localStorage.getItem('budget_company');
     const parsedCompany = saved ? JSON.parse(saved) : {};
 
-    // If we have saved data, use it but fill missing fields with defaults.
-    // If it's a fresh load (no saved data), use defaults.
-    // This ENSURES data persists even on new devices or after cache clear.
+    // Merge INITIAL_COMPANY with any saved data, but skip empty strings in saved data 
+    // to prevent them from overwriting our hardcoded defaults unintentionally
+    const mergedCompany = { ...INITIAL_COMPANY };
+
+    if (saved) {
+      Object.keys(parsedCompany).forEach(key => {
+        const val = parsedCompany[key as keyof CompanyInfo];
+        if (val && val.toString().trim() !== "") {
+          (mergedCompany as any)[key] = val;
+        }
+      });
+    }
+
     return {
-      ...INITIAL_COMPANY,
-      ...parsedCompany,
-      // Ensure logo/signature defaults are used ONLY if they are missing in the saved data
-      logo: parsedCompany.logo || INITIAL_COMPANY.logo,
-      signature: parsedCompany.signature || INITIAL_COMPANY.signature
+      ...mergedCompany,
+      // Ensure logo/signature defaults are used ONLY if they are missing or invalid in the saved data
+      logo: (parsedCompany.logo && parsedCompany.logo.length > 50) ? parsedCompany.logo : INITIAL_COMPANY.logo,
+      signature: (parsedCompany.signature && parsedCompany.signature.length > 50) ? parsedCompany.signature : INITIAL_COMPANY.signature
     };
   });
 
@@ -585,13 +594,13 @@ function App() {
                   </table>
 
                   {/* Totals & Payments Section */}
-                  <div className="mt-10 pt-8 border-t border-slate-200 page-no-break">
-                    <div className="grid grid-cols-2 gap-12 items-start">
-                      {/* Payment Terms (Left) */}
-                      <div className="space-y-6">
+                  <div className="mt-6 pt-4 border-t border-slate-200 page-no-break">
+                    <div className="grid grid-cols-2 gap-8 items-start">
+                      {/* Payment Terms (Left) - More compact */}
+                      <div className="space-y-4">
                         <div>
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">FORMA DE PAGO</p>
-                          <div className="text-[11px] space-y-3 text-slate-600">
+                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2">FORMA DE PAGO</p>
+                          <div className="text-[10px] space-y-2 text-slate-600">
                             <p className="flex justify-between border-b border-slate-50 pb-1">
                               <span>30% A la firma del contrato:</span>
                               <span className="font-bold text-slate-900 whitespace-nowrap">{(totals.total * 0.3).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
@@ -611,59 +620,59 @@ function App() {
                           <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1">Nº DE CUENTA (LA CAIXA)</p>
                           <p className="text-xs font-bold text-slate-900 tracking-wider font-mono">ES23 2100 3771 2022 0013 7681</p>
                         </div>
-
-                        <div className="pt-8 flex flex-row justify-between items-end w-full gap-8">
-                          {/* Client Signature - Boxed */}
-                          <div className="flex-1 max-w-[50%]">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 pl-2">FIRMA CLIENTE</p>
-                            <div className="h-28 border-2 border-slate-300 rounded-xl relative overflow-hidden bg-slate-50/10 w-full">
-                              <div className="absolute bottom-6 left-0 right-0 border-t-2 border-slate-300 mx-6"></div>
-                              <span className="absolute bottom-2 left-6 text-[8px] text-slate-400 font-bold uppercase tracking-widest italic">Acepto condiciones</span>
-                            </div>
-                          </div>
-
-                          {/* Company Stamp - Borderless Image */}
-                          <div className="flex-1 max-w-[40%] flex flex-col items-end">
-                            <div className="h-32 w-full relative flex items-center justify-end pr-4">
-                              {company.signature ? (
-                                <img src={company.signature} alt="Firma Empresa" className="h-full object-contain mix-blend-multiply opacity-90 rotate-[-2deg]" style={{ maxWidth: '100%' }} />
-                              ) : (
-                                <div className="w-40 h-20 border-2 border-dashed border-slate-300 rounded flex items-center justify-center">
-                                  <span className="text-[9px] text-slate-400 uppercase">Sin Sello</span>
-                                </div>
-                              )}
-                            </div>
-                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-2 pr-2">DLKom Presupuestos y Reformas</p>
-                          </div>
-                        </div>
                       </div>
 
-                      {/* Totals Breakdown (Right) */}
-                      <div className="space-y-6">
-                        <div className="space-y-4">
-                          <div className="flex justify-between items-center text-xs">
+                      {/* Totals Breakdown (Right) - More compact */}
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center text-[10px]">
                             <span className="text-slate-500 font-bold uppercase tracking-widest">Base Imponible</span>
-                            <span className="text-slate-900 font-black text-lg">
+                            <span className="text-slate-900 font-bold text-base">
                               {totals.base.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                             </span>
                           </div>
-                          <div className="flex justify-between items-center text-xs">
+                          <div className="flex justify-between items-center text-[10px]">
                             <span className="text-slate-500 font-bold uppercase tracking-widest">IVA ({(ivaRate * 100).toFixed(0)}%)</span>
-                            <span className="text-slate-900 font-black text-lg">
+                            <span className="text-slate-900 font-bold text-base">
                               {totals.iva.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                             </span>
                           </div>
-                          <div className="pt-6 border-t-2 border-slate-900 flex justify-between items-center">
-                            <span className="text-[12px] font-black text-primary-600 uppercase tracking-[0.2em]">TOTAL</span>
-                            <span className="text-3xl font-black text-primary-600 tracking-tight whitespace-nowrap">
+                          <div className="pt-4 border-t-2 border-slate-900 flex justify-between items-center">
+                            <span className="text-[10px] font-black text-primary-600 uppercase tracking-[0.2em]">TOTAL</span>
+                            <span className="text-2xl font-black text-primary-600 tracking-tight whitespace-nowrap">
                               {totals.total.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                             </span>
                           </div>
                         </div>
-                        <p className="text-[9px] text-slate-400 text-right italic leading-tight">
+                        <p className="text-[8px] text-slate-400 text-right italic leading-tight">
                           Este presupuesto tiene una validez de 15 días.<br />
                           Todos los precios incluyen materiales y mano de obra.
                         </p>
+                      </div>
+                    </div>
+
+                    {/* Signatures Row - Full Width Outside the Grid */}
+                    <div className="mt-8 flex flex-row justify-between items-end w-full gap-12">
+                      {/* Client Signature - Boxed */}
+                      <div className="flex-1">
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 pl-2">FIRMA CLIENTE</p>
+                        <div className="h-24 border-2 border-slate-200 rounded-xl relative overflow-hidden bg-slate-50/5 w-full">
+                          <div className="absolute bottom-5 left-0 right-0 border-t border-slate-300 mx-6"></div>
+                          <span className="absolute bottom-1.5 left-6 text-[7px] text-slate-400 font-bold uppercase tracking-widest italic">Acepto condiciones</span>
+                        </div>
+                      </div>
+
+                      {/* Company Stamp - Borderless Image */}
+                      <div className="flex-1 flex flex-col items-end">
+                        <div className="h-28 w-full relative flex items-center justify-end">
+                          {company.signature ? (
+                            <img src={company.signature} alt="Firma Empresa" className="h-full object-contain mix-blend-multiply opacity-95 rotate-[-1deg] mr-8" style={{ maxWidth: '100%' }} />
+                          ) : (
+                            <div className="w-32 h-16 border-2 border-dashed border-slate-200 rounded flex items-center justify-center">
+                              <span className="text-[8px] text-slate-300 uppercase">Sin Sello</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -692,26 +701,28 @@ function App() {
       <style>{`
         @media print {
           @page {
-            size: A4;
+            size: auto;
             margin: 0 !important;
           }
           header, .no-print, button, .sticky, textarea::placeholder, .fixed, .max-w-7xl + div {
             display: none !important;
           }
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            height: auto !important;
+          }
           body {
             background: white !important;
-            padding: 15mm 20mm !important; /* Internal padding simulates margins */
-            margin: 0 !important;
+            padding: 10mm 15mm !important; /* Minimal padding for cleaner PDF without browser headers */
             font-size: 10pt;
             color: #1e293b !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
-            height: auto !important;
             overflow: visible !important;
           }
-          /* Specific padding for first page if needed, but body padding usually handles it */
           .print-container {
-            width: 100%;
+            width: 100% !important;
             height: auto !important;
             overflow: visible !important;
             padding: 0 !important;
