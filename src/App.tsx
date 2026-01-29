@@ -681,13 +681,13 @@ function App() {
                         </div>
                       </div>
 
-                      {/* Company Stamp - Smaller Image (h-8) */}
+                      {/* Company Stamp - Larger Image (h-16) */}
                       <div className="flex-1 flex flex-col items-end">
-                        <div className="h-8 w-full relative flex items-center justify-end">
+                        <div className="h-16 w-full relative flex items-center justify-end">
                           {company.signature ? (
                             <img src={company.signature} alt="Firma Empresa" className="h-full object-contain mix-blend-multiply opacity-95 rotate-[-1deg] mr-4" style={{ maxWidth: '100%' }} />
                           ) : (
-                            <div className="w-24 h-8 border border-dashed border-slate-200 rounded flex items-center justify-center">
+                            <div className="w-24 h-16 border border-dashed border-slate-200 rounded flex items-center justify-center">
                               <span className="text-[7px] text-slate-300 uppercase">Sin Sello</span>
                             </div>
                           )}
