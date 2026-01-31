@@ -2,13 +2,17 @@ import type { Client } from '../types';
 import { Card, Input, Label } from './ui';
 import { User, MapPin, Phone, Mail, FileText, BadgeInfo, Briefcase, MapPinned, CheckCircle2, XCircle } from 'lucide-react';
 import { validateNIFOrCIF, validateSpanishPhone } from '../utils/validation';
+import { translations } from '../i18n/locales';
+import type { Language } from '../i18n/locales';
 
 interface ClientFormProps {
     client: Client;
     onChange: (field: keyof Client, value: string) => void;
+    language: Language;
 }
 
-export function ClientForm({ client, onChange }: ClientFormProps) {
+export function ClientForm({ client, onChange, language }: ClientFormProps) {
+    const t = translations[language];
     return (
         <Card className="mb-8 overflow-hidden border-none shadow-2xl shadow-slate-200/50 animate-in fade-in slide-in-from-bottom-6 duration-700">
             {/* Elegant Header with curved corner style from PDF */}
@@ -18,8 +22,8 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                         <User size={20} />
                     </div>
                     <div>
-                        <h2 className="text-lg font-black text-white uppercase tracking-widest leading-none">Datos del Cliente</h2>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1">Información de Facturación</p>
+                        <h2 className="text-lg font-black text-white uppercase tracking-widest leading-none">{t.client_data}</h2>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1">Información</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 rounded-full border border-slate-700">
@@ -34,7 +38,7 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                     <div className="space-y-2 group">
                         <div className="flex items-center gap-2">
                             <User size={14} className="text-primary-500" />
-                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">Nombre Completo</Label>
+                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">{t.client_name}</Label>
                         </div>
                         <Input
                             value={client.name}
@@ -48,7 +52,7 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                     <div className="space-y-2 group">
                         <div className="flex items-center gap-2">
                             <MapPin size={14} className="text-primary-500" />
-                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">Dirección</Label>
+                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">{t.address}</Label>
                         </div>
                         <Input
                             value={client.address}
@@ -62,7 +66,7 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                     <div className="space-y-2 group">
                         <div className="flex items-center gap-2">
                             <MapPinned size={14} className="text-primary-500" />
-                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">Población</Label>
+                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">{t.city}</Label>
                         </div>
                         <Input
                             value={client.city}
@@ -76,7 +80,7 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                     <div className="space-y-2 group">
                         <div className="flex items-center gap-2">
                             <BadgeInfo size={14} className="text-primary-500" />
-                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">D.N.I. / C.I.F.</Label>
+                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">{t.dni_cif}</Label>
                             {client.dni && (
                                 validateNIFOrCIF(client.dni) ? (
                                     <CheckCircle2 size={14} className="text-emerald-500 ml-auto" />
@@ -101,7 +105,7 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                     <div className="space-y-2 group">
                         <div className="flex items-center gap-2">
                             <Phone size={14} className="text-primary-500" />
-                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">Teléfono</Label>
+                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">{t.phone}</Label>
                             {client.phone && (
                                 validateSpanishPhone(client.phone) ? (
                                     <CheckCircle2 size={14} className="text-emerald-500 ml-auto" />
@@ -139,7 +143,7 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                     <div className="space-y-2 group">
                         <div className="flex items-center gap-2">
                             <Mail size={14} className="text-primary-500" />
-                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">Email</Label>
+                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">{t.email}</Label>
                         </div>
                         <Input
                             value={client.email}
@@ -153,7 +157,7 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                     <div className="space-y-2 group">
                         <div className="flex items-center gap-2">
                             <FileText size={14} className="text-primary-500" />
-                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">Fecha</Label>
+                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">{t.date}</Label>
                         </div>
                         <Input
                             type="date"
@@ -167,7 +171,7 @@ export function ClientForm({ client, onChange }: ClientFormProps) {
                     <div className="space-y-2 group">
                         <div className="flex items-center gap-2">
                             <Briefcase size={14} className="text-primary-500" />
-                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">Proyecto</Label>
+                            <Label className="uppercase text-[10px] font-bold tracking-widest text-slate-400 group-focus-within:text-primary-600 transition-colors">{t.project}</Label>
                         </div>
                         <Input
                             value={client.project}

@@ -4,6 +4,9 @@ import { Button } from './ui';
 import { Plus, Trash2, Calculator, ChevronDown, ListTree, Tags } from 'lucide-react';
 import { ManageGroups, ManageCategories } from './DataManager';
 
+import { translations } from '../i18n/locales';
+import type { Language } from '../i18n/locales';
+
 interface BudgetBuilderProps {
     items: BudgetItem[];
     onAddItem: () => void;
@@ -11,6 +14,7 @@ interface BudgetBuilderProps {
     onRemoveItem: (id: string) => void;
     groups: Group[];
     onUpdateGroups: (groups: Group[]) => void;
+    language: Language;
 }
 
 export function BudgetBuilder({
@@ -19,8 +23,10 @@ export function BudgetBuilder({
     onUpdateItem,
     onRemoveItem,
     groups,
-    onUpdateGroups
+    onUpdateGroups,
+    language
 }: BudgetBuilderProps) {
+    const t = translations[language];
     const [showGroups, setShowGroups] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
 
@@ -42,10 +48,10 @@ export function BudgetBuilder({
                         <Calculator size={22} />
                     </div>
                     <div>
-                        <h2 className="text-xl font-black text-slate-800 tracking-tight leading-none">Partidas del Presupuesto</h2>
+                        <h2 className="text-xl font-black text-slate-800 tracking-tight leading-none">Partidas</h2>
                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1.5 flex items-center gap-2">
                             <div className="w-1 h-1 rounded-full bg-slate-300"></div>
-                            {items.length} Conceptos Añadidos
+                            {items.length} {t.concept}
                         </p>
                     </div>
                 </div>
@@ -57,7 +63,7 @@ export function BudgetBuilder({
                         onClick={() => setShowGroups(true)}
                     >
                         <ListTree size={16} />
-                        Gestión Grupos
+                        Grupos
                     </Button>
                     <Button
                         variant="secondary"
@@ -66,12 +72,12 @@ export function BudgetBuilder({
                         onClick={() => setShowCategories(true)}
                     >
                         <Tags size={16} />
-                        Gestión Categorías
+                        Categorías
                     </Button>
                     <div className="w-px h-6 bg-slate-100 mx-2"></div>
                     <Button onClick={onAddItem} className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl h-11 px-6 shadow-xl shadow-slate-200 font-bold transition-all hover:scale-[1.02] active:scale-95 group">
                         <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
-                        <span className="ml-2">Añadir Concepto</span>
+                        <span className="ml-2">{t.add_item}</span>
                     </Button>
                 </div>
             </div>
@@ -82,11 +88,11 @@ export function BudgetBuilder({
                         <tr className="bg-slate-50 border-b border-slate-100 text-slate-400 uppercase tracking-widest font-black">
                             <th className="px-6 py-5 min-w-[140px]">Grupo</th>
                             <th className="px-6 py-5 min-w-[140px]">Categoría</th>
-                            <th className="px-6 py-5 min-w-[200px]">Descripción</th>
+                            <th className="px-6 py-5 min-w-[200px]">{t.concept}</th>
                             <th className="px-6 py-5 w-24 text-center">Metros 2</th>
-                            <th className="px-6 py-5 w-32 text-right">Precio de Costo</th>
-                            <th className="px-6 py-5 w-32 text-right">Precio de Venta</th>
-                            <th className="px-6 py-5 w-32 text-right bg-slate-100/30">Total</th>
+                            <th className="px-6 py-5 w-32 text-right">Costo</th>
+                            <th className="px-6 py-5 w-32 text-right">Venta</th>
+                            <th className="px-6 py-5 w-32 text-right bg-slate-100/30">{t.total}</th>
                             <th className="px-6 py-5 w-16 no-print"></th>
                         </tr>
                     </thead>

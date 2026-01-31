@@ -7,6 +7,7 @@ export type Client = {
     email: string;
     date: string;
     project: string;
+    signature?: string; // Base64 signature
 };
 
 export type CategoryItem = {
@@ -66,6 +67,7 @@ export const INITIAL_CLIENT: Client = {
     email: '',
     date: new Date().toISOString().split('T')[0],
     project: '',
+    signature: undefined,
 };
 
 export const INITIAL_COMPANY: CompanyInfo = {

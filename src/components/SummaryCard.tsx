@@ -2,13 +2,18 @@ import type { BudgetItem } from '../types';
 import { Card, cn } from './ui';
 import { Euro } from 'lucide-react';
 
+import { translations } from '../i18n/locales';
+import type { Language } from '../i18n/locales';
+
 interface SummaryCardProps {
     items: BudgetItem[];
     ivaRate: number;
     onIvaChange: (rate: number) => void;
+    language: Language;
 }
 
-export function SummaryCard({ items, ivaRate, onIvaChange }: SummaryCardProps) {
+export function SummaryCard({ items, ivaRate, onIvaChange, language }: SummaryCardProps) {
+    const t = translations[language];
 
     // Aggregations
     const totals = items.reduce((acc, item) => {
@@ -28,12 +33,12 @@ export function SummaryCard({ items, ivaRate, onIvaChange }: SummaryCardProps) {
             <Card className="bg-sky-50 border border-sky-100 shadow-xl shadow-sky-900/5 p-5 animate-in fade-in duration-700 overflow-hidden relative">
                 <h3 className="text-[9px] font-black mb-4 flex items-center gap-2 text-primary-600 uppercase tracking-[0.3em]">
                     <Euro size={16} />
-                    Resumen Final
+                    {t.summary}
                 </h3>
 
                 <div className="space-y-4">
                     <div className="flex justify-between items-end pb-2 border-b border-slate-50">
-                        <span className="text-slate-400 text-[9px] uppercase font-bold tracking-widest">Base Imponible</span>
+                        <span className="text-slate-400 text-[9px] uppercase font-bold tracking-widest">{t.base_imponible}</span>
                         <span className="text-base font-bold tracking-tight text-slate-800">{formatCurrency(totals.baseImponible)}</span>
                     </div>
 
@@ -55,7 +60,7 @@ export function SummaryCard({ items, ivaRate, onIvaChange }: SummaryCardProps) {
                             >21%</button>
                         </div>
                         <div className="text-right">
-                            <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">IVA ({(ivaRate * 100).toFixed(0)}%)</p>
+                            <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">{t.iva} ({(ivaRate * 100).toFixed(0)}%)</p>
                             <span className="text-xs font-bold text-slate-600 tracking-tight">{formatCurrency(ivaAmount)}</span>
                         </div>
                     </div>
@@ -63,7 +68,7 @@ export function SummaryCard({ items, ivaRate, onIvaChange }: SummaryCardProps) {
                     <div className="pt-4 border-t border-slate-100 relative">
                         <div className="flex justify-between items-center">
                             <div>
-                                <span className="text-[9px] font-black text-primary-600 uppercase tracking-[0.25em] block mb-0.5">Total Final</span>
+                                <span className="text-[9px] font-black text-primary-600 uppercase tracking-[0.25em] block mb-0.5">{t.total_budget}</span>
                                 <span className="text-2xl font-black tracking-tighter leading-none text-slate-900">{formatCurrency(finalTotal)}</span>
                             </div>
                             <div className="bg-primary-50 p-2 rounded-2xl border border-primary-100">
